@@ -1,0 +1,682 @@
+body.dark-theme {
+    --bg-deep-prime: #0c0c0c;
+    --bg-card-luxury: #141414;
+    --bg-nav-blur: #1a1a1a;
+    --text-pure: #ffffff;
+    --text-dimmed: #9f9f9f;
+    --gold-premium: #f59e0b;
+    --gold-hover: #d97706;
+    --border-luxury: #242424;
+    --danger-red: #ef4444;
+    /* 🌟 تدرج أسود شفاف فخم للثيم الغامق */
+    --banner-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.2));
+}
+
+body.light-theme {
+    --bg-deep-prime: #f4f6f8;
+    --bg-card-luxury: #ffffff;
+    --bg-nav-blur: #ffffff;
+    --text-pure: #111111;
+    --text-dimmed: #64748b;
+    --gold-premium: #d97706;
+    --gold-hover: #b45309;
+    --border-luxury: #e2e8f0;
+    --danger-red: #dc2626;
+    /* 🌟 تدرج أبيض ضبابي ناعم للثيم الفاتح لضمان وضوح النصوص الداكنة */
+    --banner-overlay: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    background-color: var(--bg-deep-prime);
+    color: var(--text-pure);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    direction: rtl;
+}
+
+.container {
+    width: 94%;
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+/* الهيدر الثابت */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-nav-blur);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--gold-premium);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 999;
+}
+
+.nav-bar h1, .nav-bar h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-pure);
+}
+
+.main-header {
+    margin-top: 75px;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: 1px solid var(--border-luxury);
+    color: var(--text-pure);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    border-color: var(--gold-premium);
+    color: var(--gold-premium);
+}
+
+/* البانر العلوي */
+.restaurant-banner {
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+}
+
+.banner-overlay-content {
+    background: var(--banner-overlay);
+    width: 100%;
+    padding: 20px;
+    transition: background 0.2s ease;
+}
+
+.status-tags {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.status-tag {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background-color: #64748b;
+    color: #fff;
+}
+
+.status-tag.open {
+    background-color: #10b981;
+}
+
+.status-tag.closed {
+    background-color: var(--danger-red);
+}
+
+.maps-btn {
+    display: inline-block;
+    background-color: var(--gold-premium);
+    color: #fff;
+    padding: 6px 14px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    margin-top: 10px;
+}
+
+/* التبويبات */
+.categories-nav {
+    background-color: var(--bg-nav-blur);
+    padding: 12px 0;
+    position: sticky;
+    top: 73px;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-luxury);
+    overflow-x: auto;
+}
+
+.categories-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.categories-nav #categories-container {
+    display: flex;
+    gap: 10px;
+}
+
+.category-tab {
+    padding: 6px 18px;
+    background-color: var(--bg-deep-prime);
+    border: 1px solid var(--border-luxury);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.category-tab.active, .category-tab:hover {
+    background-color: var(--gold-premium);
+    color: #fff;
+    border-color: var(--gold-premium);
+}
+
+/* شبكة كروت المنيو والمحاذاة التناظرية المثالية للأسفل */
+.menu-container {
+    padding: 30px 0;
+}
+
+.section-title {
+    margin-bottom: 20px;
+    border-right: 4px solid var(--gold-premium);
+    padding-right: 10px;
+}
+
+/* 💻 تنسيق اللاب توب: يمتد حقل البحث بالكامل ليملأ الخانة الميتة (الخط الأحمر) */
+.section-header-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 15px !important;
+    margin-bottom: 25px !important;
+    width: 100% !important;
+}
+
+.section-header-row .section-title {
+    margin-bottom: 0 !important;
+    white-space: nowrap !important;
+}
+
+.section-header-row .search-wrapper {
+    position: relative !important;
+    width: 100% !important;
+    flex-grow: 1 !important; /* التمدد الكامل لملء الخانة الفاضية على اللاب توب */
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+.meals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.meal-card {
+    background-color: var(--bg-card-luxury);
+    border: 1px solid var(--border-luxury);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.meal-img-wrapper {
+    width: 100%;
+    height: 160px;
+}
+
+.meal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.meal-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.meal-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.meal-price {
+    color: var(--gold-premium);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.meal-desc {
+    font-size: 0.8rem;
+    color: var(--text-dimmed);
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.add-to-cart-btn {
+    margin-top: auto;
+    width: 100%;
+    background-color: var(--gold-premium);
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* 📱 دعم شاشات الجوال: الحفاظ على الحجم طبيعي متناسق بدون تمدد ممل للمكان */
+@media (max-width: 768px) {
+    .meals-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .meal-img-wrapper {
+        height: 100px;
+    }
+
+    .meal-info {
+        padding: 8px;
+    }
+
+    .meal-title-row {
+        flex-direction: column;
+    }
+
+    .meal-title-row h3 {
+        font-size: 0.85rem;
+    }
+
+    .meal-price {
+        font-size: 0.8rem;
+    }
+
+    .meal-desc {
+        font-size: 0.7rem;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+
+    .add-to-cart-btn {
+        font-size: 0.75rem;
+        padding: 6px;
+    }
+
+    /* 📱 ضبط حقل البحث هنا على الجوال ليكون متناسقاً ولا يملأ المكان بشكل مشوه */
+    .section-header-row {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+    }
+
+    .section-header-row .search-wrapper {
+        flex-grow: 0 !important;
+        width: 180px !important; /* حجم محدد ومثالي ليكون أنيقاً على الجوال بجانب كلمة الكل */
+    }
+}
+
+/* 🛒 تصميم السلة كقائمة جانبية منبثقة بسلاسة (Sidebar) */
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: -350px;
+    width: 340px;
+    background-color: var(--bg-card-luxury);
+    border-right: 1px solid var(--border-luxury);
+    box-shadow: 4px 0 25px rgba(0,0,0,0.4);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-sidebar.open {
+    left: 0;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-luxury);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-sidebar-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-pure);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.sidebar-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-luxury);
+}
+
+.cart-total-section {
+    padding: 15px 0;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border-luxury);
+    margin-bottom: 15px;
+}
+
+.customer-delivery-form {
+    margin-top: 10px;
+}
+
+.customer-delivery-form h4 {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    color: var(--gold-premium);
+}
+
+.submit-order-btn {
+    width: 100%;
+    background-color: #25d366;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    margin-top: 15px;
+}
+
+/* لوحة تحكم الأدمن والـ CRUD */
+.admin-dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 20px;
+    margin-top: 90px;
+    padding-bottom: 40px;
+}
+
+@media (max-width: 850px) {
+    .admin-dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.admin-card-section {
+    background-color: var(--bg-card-luxury);
+    border: 1px solid var(--border-luxury);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.admin-card-section h3 {
+    font-size: 1.05rem;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-luxury);
+    padding-bottom: 8px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    color: var(--text-dimmed);
+}
+
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--bg-deep-prime);
+    border: 1px solid var(--border-luxury);
+    color: inherit;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.form-inline {
+    display: flex;
+    gap: 8px;
+}
+
+.form-inline input {
+    flex: 1;
+    padding: 8px;
+    background-color: var(--bg-deep-prime);
+    border: 1px solid var(--border-luxury);
+    color: inherit;
+    border-radius: 6px;
+}
+
+.save-btn, .add-btn {
+    background-color: var(--gold-premium);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    width: 100%;
+}
+
+/* إدارة المخزون */
+#admin-stock-container {
+    overflow: visible !important;
+}
+
+.admin-stock-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    margin-top: 15px;
+    overflow: visible !important;
+}
+
+.stock-item-card {
+    background-color: var(--bg-deep-prime) !important;
+    border: 1px solid var(--border-luxury) !important;
+    border-radius: 12px !important;
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    padding: 15px !important;
+    position: relative;
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+.stock-item-card img {
+    width: 100% !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+}
+
+.stock-details {
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    width: 100% !important;
+}
+
+.stock-details h4 {
+    font-size: 0.95rem !important;
+    margin-bottom: 8px !important;
+    color: var(--text-pure) !important;
+}
+
+.stock-action-inputs {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    margin-bottom: 12px !important;
+    width: 100% !important;
+}
+
+.stock-action-inputs input, .stock-action-inputs select {
+    width: 100% !important;
+    padding: 8px 10px !important;
+    background: var(--bg-card-luxury) !important;
+    border: 1px solid var(--border-luxury) !important;
+    color: var(--text-pure) !important;
+    border-radius: 6px !important;
+    font-size: 0.85rem !important;
+    font-family: 'Cairo', sans-serif !important;
+}
+
+.stock-action-inputs select {
+    cursor: pointer;
+    position: relative;
+    z-index: 99;
+}
+
+.stock-buttons-group {
+    display: flex !important;
+    gap: 8px !important;
+    margin-top: auto !important;
+    padding-top: 8px !important;
+    width: 100% !important;
+}
+
+.inline-save-btn {
+    flex: 1 !important;
+    background-color: #10b981 !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 12px !important;
+    font-size: 0.8rem !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-weight: 700 !important;
+}
+
+.inline-delete-btn {
+    background-color: var(--danger-red) !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 12px !important;
+    font-size: 0.8rem !important;
+    border-radius: 6px !important;
+}
+
+.loading-text {
+    text-align: center;
+    color: var(--text-dimmed);
+    padding: 20px;
+    display: block;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .stock-item-card {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        padding: 20px !important;
+    }
+
+    .stock-item-card img {
+        width: 160px !important;
+        height: 120px !important;
+    }
+
+    .stock-details {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+    }
+
+    .stock-action-inputs {
+        display: grid !important;
+        grid-template-columns: 2fr 1fr 1fr !important;
+        gap: 12px !important;
+        align-items: center !important;
+        margin-bottom: 0 !important;
+    }
+
+    .stock-action-inputs input, .stock-action-inputs select {
+        margin-bottom: 0 !important;
+    }
+
+    .stock-buttons-group {
+        width: auto !important;
+        align-self: flex-end !important;
+        gap: 10px !important;
+    }
+
+    .inline-save-btn {
+        width: 120px !important;
+        flex: none !important;
+    }
+}
+
+/* ✨ تأثير الهوفر الفخم الحقيقي لكروت المنيو والمخزون */
+.meal-card, .stock-item-card {
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+    will-change: transform;
+}
+
+.meal-card:hover, .stock-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
+
+.meal-disabled {
+    opacity: 0.6;
+    filter: grayscale(50%);
+    position: relative;
+}
+
+.meal-disabled .order-btn {
+    background-color: #4b5563 !important;
+    color: #9ca3af !important;
+    cursor: not-allowed;
+}
+
+.unavailable-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: #dc2626;
+    color: white;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}

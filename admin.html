@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم الإدارية - مطعم كاستيللو</title>
+    
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark-theme';
+            document.documentElement.className = savedTheme;
+        })();
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* 1. التنسيق الهيكلي المشترك لشاشة تسجيل الدخول المعزولة */
+        .login-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 99999;
+            display: flex; justify-content: center; align-items: center;
+            transition: all 0.3s ease;
+        }
+        .login-box {
+            padding: 30px; border-radius: 12px; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); text-align: center;
+            transition: all 0.3s ease;
+        }
+        .login-box h2 { margin-bottom: 20px; font-size: 1.4rem; font-family: 'Cairo', sans-serif; }
+        .login-box input, .login-box select {
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            border-radius: 6px; font-family: 'Cairo', sans-serif;
+        }
+        .login-box button {
+            width: 100%; border: none; padding: 12px; border-radius: 6px;
+            cursor: pointer; font-weight: 700; font-family: 'Cairo', sans-serif;
+            color: white;
+        }
+
+        /* 2. ☀️ ألوان شاشة الدخول الإجبارية عندما يكون ثيم المنيو فــاتــح (light-theme) */
+        html.light-theme .login-overlay, body.light-theme .login-overlay {
+            background-color: rgba(243, 244, 246, 0.85) !important; 
+        }
+        html.light-theme .login-box, body.light-theme .login-box {
+            background-color: #ffffff !important; 
+            border: 1px solid #e5e7eb !important;
+        }
+        html.light-theme .login-box h2 { color: #d97706 !important; } 
+        html.light-theme .login-box input, html.light-theme .login-box select {
+            background-color: #f9fafb !important; border: 1px solid #d1d5db !important;
+            color: #1f2937 !important;
+        }
+        html.light-theme .login-box button { background-color: #d97706 !important; }
+
+        /* 3. 🌙 ألوان شاشة الدخول الإجبارية عندما يكون ثيم المنيو غــامــق (dark-theme) */
+        html.dark-theme .login-overlay, body.dark-theme .login-overlay {
+            background-color: rgba(12, 12, 12, 0.85) !important;
+        }
+        html.dark-theme .login-box, body.dark-theme .login-box {
+            background-color: #141414 !important; border: 1px solid #242424 !important;
+        }
+        html.dark-theme .login-box h2 { color: #f59e0b !important; }
+        html.dark-theme .login-box input, html.dark-theme .login-box select {
+            background-color: #0c0c0c !important; border: 1px solid #242424 !important;
+            color: #ffffff !important;
+        }
+        html.dark-theme .login-box button { background-color: #f59e0b !important; }
+
+        /* 📱 4. تنسيق مرن وفخم لإدارة مخزون الوجبات وحقول اللغات المتعددة على الموبايل */
+        .stock-item-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-deep-prime);
+            border: 1px solid var(--border-luxury);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .stock-item-card img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .stock-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .stock-details div {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stock-details input[type="text"],
+        .stock-details input[type="number"],
+        .stock-details textarea,
+        .stock-details select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-luxury);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-gold);
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+
+        .stock-action-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stock-buttons-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stock-buttons-group button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .stock-item-card {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+            
+            .stock-item-card img {
+                width: 160px;
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+<body class="admin-page-body">
+    
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <img id="login-res-logo" src="https://via.placeholder.com/150?text=Castello" alt="شعار المطعم" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 2px solid var(--border-luxury); display: block; margin-left: auto; margin-right: auto;">
+            <h2><i class="fas fa-lock"></i> تسجيل دخول الإدارة</h2>
+            <input type="email" id="login-email" placeholder="البريد الإلكتروني للأدمن" required>
+            <input type="password" id="login-password" placeholder="كلمة المرور السحابية" required>
+            <button id="btn-do-login">دخول المنظومة</button>
+        </div>
+    </div>
+
+    <div id="adminContent" style="display: none;">
+        <div class="nav-bar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img id="nav-res-logo" src="https://via.placeholder.com/150?text=Castello" alt="شعار المطعم" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-luxury);">
+                <h2>لوحة الإدارة وإدارة المخزون</h2>
+            </div>
+            <div class="nav-actions">
+                <button id="theme-toggle-btn" class="nav-btn"><i class="fas fa-moon"></i></button>
+                <a href="index.html" class="nav-btn"><i class="fas fa-arrow-left"></i> عرض المنيو</a>
+            </div>
+        </div>
+
+        <div class="container admin-dashboard-layout">
+            <div class="admin-sidebar-forms">
+                <div class="admin-card-section">
+                    <h3>إعدادات المطعم العامة</h3>
+                    <div class="form-group"><label>اسم المطعم:</label><input type="text" id="input-res-name"></div>
+                    <div class="form-group">
+                        <label>حالة المطعم الحالية:</label>
+                        <select id="input-res-status">
+                            <option value="true">مفتوح الآن</option>
+                            <option value="false">مغلق حالياً</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>ساعات العمل النصية:</label><input type="text" id="input-working-hours"></div>
+                    <div class="form-group"><label>رقم واتساب استقبال الطلبات:</label><input type="text" id="input-whatsapp"></div>
+                    <div class="form-group"><label>رابط موقع قوقل مابس:</label><input type="text" id="input-maps"></div>
+                    <div class="form-group"><label>العنوان النصي للمطعم:</label><input type="text" id="input-address"></div>
+                    <div class="form-group"><label>تغيير صورة الغلاف (Banner):</label><input type="file" id="input-banner-file" accept="image/*"></div>
+                    
+                    <div class="form-group"><label>تغيير شعار المطعم (Logo):</label><input type="file" id="input-logo-file" accept="image/*"></div>
+                    
+                    <div class="form-group" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-luxury);">
+                        <label style="font-weight: 700; color: var(--text-luxury); display: block; margin-bottom: 8px;">
+                            <i class="fas fa-money-bill-wave"></i> نظام العملة الافتراضية للمطعم:
+                        </label>
+                        <select id="input-currency-select" style="width: 100%; padding: 10px; margin-bottom: 5px;">
+                            <option value="TRY|TL">🇹🇷 الليرة التركية (TL)</option>
+                            <option value="SYP|ل.س">🇸🇾 الليرة السورية (ل.س)</option>
+                            <option value="USD|$">🇺🇸 الدولار الأمريكي ($)</option>
+                        </select>
+                        <div id="currency-history-info" style="font-size: 0.75rem; color: var(--text-dimmed); margin-top: 6px;"></div>
+                    </div>
+
+                    <button class="save-btn" id="btn-save-settings">حفظ التعديلات</button>
+                </div>
+
+                <div class="admin-card-section">
+                    <h3>أقسام المنيو (Categories)</h3>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>إضافة قسم جديد باللغات الثلاث:</label>
+                        <div class="form-group-vertical" style="display: flex; flex-direction: column; gap: 8px;">
+                            <input type="text" id="new-category-name" placeholder="اسم القسم بالعربية (مثال: وجبات غربية)">
+                            <input type="text" id="new-category-name-tr" placeholder="اسم القسم بالتركية (مثال: Batı Yemekleri)">
+                            <input type="text" id="new-category-name-en" placeholder="اسم القسم بالإنجليزية (مثال: Western Dishes)">
+                            <button class="add-btn" id="btn-add-category" style="width: 100%; margin-top: 4px;">إضافة القسم</button>
+                        </div>
+                    </div>
+                    
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 8px; color: var(--text-dimmed);">الأصناف الحالية وإدارتها:</label>
+                    <div id="admin-categories-list" style="max-height: 200px; overflow-y: auto; padding-left: 2px;"></div>
+                </div>
+
+                <div class="admin-card-section">
+                    <h3>إضافة وجبة جديدة</h3>
+                    <div class="form-group"><label>القسم الحاضن للوجبة:</label><select id="meal-category-select"></select></div>
+                    
+                    <div class="form-group">
+                        <label>اسم الوجبة (العربية):</label>
+                        <input type="text" id="new-meal-title" placeholder="مثال: برغر دجاج دبل">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم الوجبة (Türkçe):</label>
+                        <input type="text" id="new-meal-title-tr" placeholder="مثال: Double Tavuk Burger">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم الوجبة (English):</label>
+                        <input type="text" id="new-meal-title-en" placeholder="مثال: Double Chicken Burger">
+                    </div>
+
+                    <div class="form-group"><label>السعر بالعملة الأساسية:</label><input type="number" id="new-meal-price"></div>
+                    
+                    <div class="form-group">
+                        <label>وصف ومكونات الوجبة (العربية):</label>
+                        <textarea id="new-meal-desc" rows="2" placeholder="المكونات بالعربية..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>وصف ومكونات الوجبة (Türkçe):</label>
+                        <textarea id="new-meal-desc-tr" rows="2" placeholder="Türkçe açıklama..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>وصف ومكونات الوجبة (English):</label>
+                        <textarea id="new-meal-desc-en" rows="2" placeholder="English description..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>حالة توفر الوجبة فوراً:</label>
+                        <select id="new-meal-availability">
+                            <option value="true">متوفرة وجاهزة للطلب</option>
+                            <option value="false">غير متوفرة حالياً (مخفية مؤقتاً)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"><label>صورة الوجبة الشخصية:</label><input type="file" id="new-meal-file" accept="image/*"></div>
+                    <button class="save-btn" id="btn-add-meal">إضافة الوجبة للمنيو</button>
+                </div>
+            </div>
+
+            <div class="admin-main-stock-control">
+                <div class="admin-card-section">
+                    <h3>إدارة المخزون والوجبات الحالية</h3>
+                    <div class="admin-stock-grid" id="admin-stock-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="currencyConvertModal" class="login-overlay" style="display: none; background-color: rgba(0,0,0,0.8) !important; z-index: 999999;">
+        <div class="login-box" style="max-width: 450px; text-align: right; padding: 25px;">
+            <h2 style="text-align: center; margin-top: 0; font-size: 1.3rem;">
+                <i class="fas fa-calculator"></i> معالج تغيير العملة الذكي
+            </h2>
+            <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 15px; color: var(--text-luxury);">
+                لقد قمتِ بتغيير العملة الافتراضية للمطعم. لتفادي تعديل أسعار الوجبات يدوياً وجبة تلو الأخرى، يمكنكِ تحويل الأسعار تلقائياً بناءً على سعر الصرف الآن.
+            </p>
+            
+            <div class="form-group" style="margin-bottom: 15px; text-align: right;">
+                <label id="exchange-rate-label" style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 8px; color: var(--text-luxury);"></label>
+                <input type="number" id="input-exchange-rate" step="any" placeholder="أدخلي قيمة التحويل الحالية (مثال: 0.5 أو 30)" style="width: 100%; padding: 10px;">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button id="btn-submit-auto-convert" style="background-color: #10b981 !important; flex: 1; padding: 12px; font-size: 0.85rem;">
+                    <i class="fas fa-bolt"></i> تحويل تلقائي للكل
+                </button>
+                <button id="btn-skip-convert" style="background-color: #6b7280 !important; flex: 1; padding: 12px; font-size: 0.85rem;">
+                    <i class="fas fa-edit"></i> تعديل يدوياً لاحقاً
+                </button>
+            </div>
+            <p style="font-size: 0.75rem; color: #ef4444; text-align: center; margin-top: 15px; font-weight: bold; margin-bottom: 0;">
+                ⚠️ تحذير: التحويل التلقائي سيقوم بتعديل وحفظ قيم الأسعار الجديدة مباشرة في قاعدة البيانات لكافة الوجبات!
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="js/admin.js"></script> 
+
+    <script>
+        (function() {
+            const injectStorageFunction = () => {
+                window.uploadToSupabaseStorage = async function(fileObject, bucketName) {
+                    if (!fileObject) return null;
+                    try {
+                        const uniqName = `${Date.now()}_${fileObject.name.replace(/\s+/g, '_')}`;
+                        const fileBuffer = await fileObject.arrayBuffer(); 
+
+                        const { data, error } = await supabaseClient.storage
+                            .from(bucketName)
+                            .upload(uniqName, fileBuffer, {
+                                contentType: fileObject.type,
+                                upsert: true
+                            });
+                        
+                        if (error) {
+                            console.error("خطأ رفع بـ Storage Bucket:", error.message);
+                            return null;
+                        }
+                        
+                        const { data: publicUrlData } = supabaseClient.storage.from(bucketName).getPublicUrl(uniqName);
+                        return publicUrlData.publicUrl;
+                    } catch (e) {
+                        console.error("خلل في ممر التحويل الثنائي:", e);
+                        return null;
+                    }
+                };
+            };
+
+            window.addEventListener('DOMContentLoaded', injectStorageFunction);
+            window.addEventListener('load', injectStorageFunction);
+            setTimeout(injectStorageFunction, 500);
+            setTimeout(injectStorageFunction, 1500);
+        })();
+    </script>
+</body>
+</html>
