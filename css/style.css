@@ -8,8 +8,11 @@ body.dark-theme {
     --gold-hover: #d97706;
     --border-luxury: #242424;
     --danger-red: #ef4444;
-    /* 🌟 تدرج أسود شفاف فخم للثيم الغامق */
-    --banner-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.2));
+    --banner-overlay: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85),
+        rgba(0, 0, 0, 0.2)
+    );
 }
 
 body.light-theme {
@@ -22,9 +25,16 @@ body.light-theme {
     --gold-hover: #b45309;
     --border-luxury: #e2e8f0;
     --danger-red: #dc2626;
-    /* 🌟 تدرج أبيض ضبابي ناعم للثيم الفاتح لضمان وضوح النصوص الداكنة */
-    --banner-overlay: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
+    --banner-overlay: linear-gradient(
+        to top,
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.3)
+    );
 }
+
+/* =========================
+   RESET
+========================= */
 
 * {
     box-sizing: border-box;
@@ -33,11 +43,19 @@ body.light-theme {
     font-family: 'Cairo', sans-serif;
 }
 
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
+    width: 100%;
+    min-height: 100vh;
     background-color: var(--bg-deep-prime);
     color: var(--text-pure);
     transition: background-color 0.2s ease, color 0.2s ease;
     direction: rtl;
+    overflow-x: hidden;
 }
 
 .container {
@@ -46,23 +64,28 @@ body {
     margin: 0 auto;
 }
 
-/* الهيدر الثابت */
+/* =========================
+   HEADER
+========================= */
+
 .nav-bar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
     background-color: var(--bg-nav-blur);
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid var(--gold-premium);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     z-index: 999;
 }
 
-.nav-bar h1, .nav-bar h2 {
+.nav-bar h1,
+.nav-bar h2 {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--text-pure);
@@ -75,6 +98,7 @@ body {
 .nav-actions {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .nav-btn {
@@ -92,7 +116,10 @@ body {
     color: var(--gold-premium);
 }
 
-/* البانر العلوي */
+/* =========================
+   RESTAURANT BANNER
+========================= */
+
 .restaurant-banner {
     height: 220px;
     background-size: cover;
@@ -144,7 +171,10 @@ body {
     margin-top: 10px;
 }
 
-/* التبويبات */
+/* =========================
+   CATEGORIES
+========================= */
+
 .categories-nav {
     background-color: var(--bg-nav-blur);
     padding: 12px 0;
@@ -153,6 +183,7 @@ body {
     z-index: 100;
     border-bottom: 1px solid var(--border-luxury);
     overflow-x: auto;
+    scrollbar-width: none;
 }
 
 .categories-nav::-webkit-scrollbar {
@@ -162,6 +193,9 @@ body {
 .categories-nav #categories-container {
     display: flex;
     gap: 10px;
+    align-items: center;
+    width: max-content;
+    min-width: 100%;
 }
 
 .category-tab {
@@ -172,15 +206,21 @@ body {
     cursor: pointer;
     font-size: 0.85rem;
     white-space: nowrap;
+    color: var(--text-pure);
+    transition: all 0.2s ease;
 }
 
-.category-tab.active, .category-tab:hover {
+.category-tab.active,
+.category-tab:hover {
     background-color: var(--gold-premium);
     color: #fff;
     border-color: var(--gold-premium);
 }
 
-/* شبكة كروت المنيو والمحاذاة التناظرية المثالية للأسفل */
+/* =========================
+   MENU
+========================= */
+
 .menu-container {
     padding: 30px 0;
 }
@@ -191,11 +231,12 @@ body {
     padding-right: 10px;
 }
 
-/* 💻 تنسيق اللاب توب: يمتد حقل البحث بالكامل ليملأ الخانة الميتة (الخط الأحمر) */
+/* عنوان القسم + البحث */
+
 .section-header-row {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: flex-start !important;
+    justify-content: space-between !important;
     align-items: center !important;
     flex-wrap: nowrap !important;
     gap: 15px !important;
@@ -206,20 +247,26 @@ body {
 .section-header-row .section-title {
     margin-bottom: 0 !important;
     white-space: nowrap !important;
+    flex-shrink: 0 !important;
 }
 
 .section-header-row .search-wrapper {
     position: relative !important;
     width: 100% !important;
-    flex-grow: 1 !important; /* التمدد الكامل لملء الخانة الفاضية على اللاب توب */
-    max-width: 100% !important;
+    flex: 1 1 auto !important;
+    max-width: 320px !important;
     margin: 0 !important;
 }
+
+/* =========================
+   MEALS GRID
+========================= */
 
 .meals-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    width: 100%;
 }
 
 .meal-card {
@@ -229,11 +276,14 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    position: relative;
 }
 
 .meal-img-wrapper {
     width: 100%;
     height: 160px;
+    overflow: hidden;
 }
 
 .meal-img {
@@ -247,13 +297,20 @@ body {
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-width: 0;
 }
 
 .meal-title-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: 8px;
     margin-bottom: 8px;
+}
+
+.meal-title-row h3 {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .meal-price {
@@ -282,70 +339,20 @@ body {
     font-size: 0.85rem;
 }
 
-/* 📱 دعم شاشات الجوال: الحفاظ على الحجم طبيعي متناسق بدون تمدد ممل للمكان */
-@media (max-width: 768px) {
-    .meals-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
+/* =========================
+   CART SIDEBAR
+========================= */
 
-    .meal-img-wrapper {
-        height: 100px;
-    }
-
-    .meal-info {
-        padding: 8px;
-    }
-
-    .meal-title-row {
-        flex-direction: column;
-    }
-
-    .meal-title-row h3 {
-        font-size: 0.85rem;
-    }
-
-    .meal-price {
-        font-size: 0.8rem;
-    }
-
-    .meal-desc {
-        font-size: 0.7rem;
-        -webkit-line-clamp: 2;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        margin-bottom: 8px;
-    }
-
-    .add-to-cart-btn {
-        font-size: 0.75rem;
-        padding: 6px;
-    }
-
-    /* 📱 ضبط حقل البحث هنا على الجوال ليكون متناسقاً ولا يملأ المكان بشكل مشوه */
-    .section-header-row {
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        gap: 10px !important;
-    }
-
-    .section-header-row .search-wrapper {
-        flex-grow: 0 !important;
-        width: 180px !important; /* حجم محدد ومثالي ليكون أنيقاً على الجوال بجانب كلمة الكل */
-    }
-}
-
-/* 🛒 تصميم السلة كقائمة جانبية منبثقة بسلاسة (Sidebar) */
 .cart-sidebar {
     position: fixed;
     top: 0;
     bottom: 0;
     left: -350px;
     width: 340px;
+    max-width: 90vw;
     background-color: var(--bg-card-luxury);
     border-right: 1px solid var(--border-luxury);
-    box-shadow: 4px 0 25px rgba(0,0,0,0.4);
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4);
     z-index: 10000;
     display: flex;
     flex-direction: column;
@@ -416,7 +423,10 @@ body {
     margin-top: 15px;
 }
 
-/* لوحة تحكم الأدمن والـ CRUD */
+/* =========================
+   ADMIN DASHBOARD
+========================= */
+
 .admin-dashboard-layout {
     display: grid;
     grid-template-columns: 1fr 1.3fr;
@@ -457,7 +467,9 @@ body {
     color: var(--text-dimmed);
 }
 
-.form-group input, .form-group textarea, .form-group select {
+.form-group input,
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 8px;
     background-color: var(--bg-deep-prime);
@@ -481,7 +493,8 @@ body {
     border-radius: 6px;
 }
 
-.save-btn, .add-btn {
+.save-btn,
+.add-btn {
     background-color: var(--gold-premium);
     color: white;
     border: none;
@@ -492,7 +505,10 @@ body {
     width: 100%;
 }
 
-/* إدارة المخزون */
+/* =========================
+   ADMIN STOCK
+========================= */
+
 #admin-stock-container {
     overflow: visible !important;
 }
@@ -548,7 +564,8 @@ body {
     width: 100% !important;
 }
 
-.stock-action-inputs input, .stock-action-inputs select {
+.stock-action-inputs input,
+.stock-action-inputs select {
     width: 100% !important;
     padding: 8px 10px !important;
     background: var(--bg-card-luxury) !important;
@@ -602,6 +619,10 @@ body {
     width: 100%;
 }
 
+/* =========================
+   STOCK DESKTOP
+========================= */
+
 @media (min-width: 768px) {
     .stock-item-card {
         flex-direction: row !important;
@@ -628,7 +649,8 @@ body {
         margin-bottom: 0 !important;
     }
 
-    .stock-action-inputs input, .stock-action-inputs select {
+    .stock-action-inputs input,
+    .stock-action-inputs select {
         margin-bottom: 0 !important;
     }
 
@@ -644,13 +666,20 @@ body {
     }
 }
 
-/* ✨ تأثير الهوفر الفخم الحقيقي لكروت المنيو والمخزون */
-.meal-card, .stock-item-card {
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+/* =========================
+   HOVER EFFECTS
+========================= */
+
+.meal-card,
+.stock-item-card {
+    transition:
+        transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+        box-shadow 0.3s ease;
     will-change: transform;
 }
 
-.meal-card:hover, .stock-item-card:hover {
+.meal-card:hover,
+.stock-item-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
 }
@@ -678,25 +707,37 @@ body {
     font-size: 0.75rem;
     font-weight: 700;
     z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
+/* =========================
+   SPECIAL OFFERS
+========================= */
 
-
-
-
-
-
-
-
---------------------------------------
-/* 🌟 قسم العروض الخاص */
 .offers-section {
-    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(241, 196, 15, 0.05));
+    background: linear-gradient(
+        135deg,
+        rgba(231, 76, 60, 0.1),
+        rgba(241, 196, 15, 0.05)
+    );
     border: 1px solid rgba(231, 76, 60, 0.3);
     border-radius: 12px;
     padding: 15px;
     margin-bottom: 25px;
+}
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .offers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
 }
 
 .offers-title {
@@ -709,7 +750,6 @@ body {
     margin-bottom: 12px;
 }
 
-/* 🏷️ شارة العرض على الكرت */
 .offer-badge {
     position: absolute;
     top: 10px;
@@ -720,11 +760,10 @@ body {
     font-weight: bold;
     padding: 4px 8px;
     border-radius: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 2;
 }
 
-/* 💰 تنسيق الأسعار (القديم المشطوب والجديد) */
 .price-container {
     display: flex;
     align-items: center;
@@ -742,4 +781,236 @@ body {
     color: #2ecc71;
     font-size: 1.1rem;
     font-weight: bold;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    /* الهيدر */
+
+    .nav-bar {
+        padding: 10px 12px;
+    }
+
+    .nav-bar h1 {
+        font-size: 1rem;
+    }
+
+    .nav-actions {
+        gap: 5px;
+    }
+
+    .nav-btn {
+        padding: 7px 9px;
+        font-size: 0.8rem;
+    }
+
+    .lang-selector-wrapper {
+        display: none !important;
+    }
+
+    .main-header {
+        margin-top: 60px;
+    }
+
+    /* البانر */
+
+    .restaurant-banner {
+        height: 190px;
+    }
+
+    .banner-overlay-content {
+        padding: 15px;
+    }
+
+    /* الأقسام */
+
+    .categories-nav {
+        top: 58px;
+        padding: 10px 0;
+    }
+
+    .category-tab {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+    }
+
+    /* محتوى المنيو */
+
+    .menu-container {
+        padding: 20px 0;
+    }
+
+    /* العنوان + البحث */
+
+    .section-header-row {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-bottom: 20px !important;
+    }
+
+    .section-header-row .section-title {
+        flex: 0 0 auto !important;
+        max-width: 45% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 1rem !important;
+        padding-right: 8px !important;
+    }
+
+    .section-header-row .search-wrapper {
+        flex: 1 1 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+    }
+
+    .section-header-row .search-wrapper input {
+        font-size: 0.75rem !important;
+        padding: 8px 35px 8px 10px !important;
+    }
+
+    /* شبكة الوجبات
+       مهم: كرتين جنب بعض على الجوال */
+
+    .meals-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+
+    .meal-card {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .meal-img-wrapper {
+        height: 100px;
+    }
+
+    .meal-info {
+        padding: 8px;
+    }
+
+    .meal-title-row {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .meal-title-row h3 {
+        font-size: 0.85rem;
+        line-height: 1.3;
+    }
+
+    .meal-price {
+        font-size: 0.8rem;
+    }
+
+    .meal-desc {
+        font-size: 0.7rem;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+
+    .add-to-cart-btn {
+        font-size: 0.75rem;
+        padding: 6px;
+    }
+
+    /* الأسعار بالعروض */
+
+    .price-container {
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .old-price {
+        font-size: 0.7rem;
+    }
+
+    .new-price {
+        font-size: 0.9rem;
+    }
+
+    .offer-badge {
+        top: 6px;
+        right: 6px;
+        font-size: 0.65rem;
+        padding: 3px 6px;
+    }
+
+    /* السلة */
+
+    .cart-sidebar {
+        width: 320px;
+        max-width: 90vw;
+    }
+}
+
+/* =========================
+   VERY SMALL PHONES
+========================= */
+
+@media (max-width: 380px) {
+
+    .container {
+        width: 96%;
+    }
+
+    .nav-bar h1 {
+        font-size: 0.9rem;
+    }
+
+    .nav-btn {
+        padding: 6px 7px;
+    }
+
+    .section-header-row .section-title {
+        font-size: 0.9rem !important;
+        max-width: 42% !important;
+    }
+
+    .section-header-row .search-wrapper input {
+        font-size: 0.7rem !important;
+    }
+
+    .meals-grid {
+        gap: 8px !important;
+    }
+
+    .meal-img-wrapper {
+        height: 90px;
+    }
+
+    .meal-info {
+        padding: 7px;
+    }
+
+    .meal-title-row h3 {
+        font-size: 0.78rem;
+    }
+
+    .meal-price {
+        font-size: 0.72rem;
+    }
+
+    .meal-desc {
+        font-size: 0.65rem;
+    }
+
+    .add-to-cart-btn {
+        font-size: 0.68rem;
+        padding: 6px 4px;
+    }
 }
