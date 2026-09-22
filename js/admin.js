@@ -654,7 +654,7 @@ function renderCategoryManagement(categories) {
 // رفع الملفات إلى Supabase Storage
 // ==========================================
 
-aasync function uploadToSupabaseStorage(fileObject, bucketName) {
+async function uploadToSupabaseStorage(fileObject, bucketName) {
 
     if (!fileObject) {
         return null;
