@@ -654,10 +654,7 @@ function renderCategoryManagement(categories) {
 // رفع الملفات إلى Supabase Storage
 // ==========================================
 
-async function uploadToSupabaseStorage(
-    fileObject,
-    bucketName
-) {
+aasync function uploadToSupabaseStorage(fileObject, bucketName) {
 
     if (!fileObject) {
         return null;
@@ -665,67 +662,88 @@ async function uploadToSupabaseStorage(
 
     try {
 
-        const extension =
-            fileObject.name
-                .split('.')
-                .pop()
-                .toLowerCase();
-
-        const uniqueName =
-            `file_${Date.now()}_${Math.floor(
-                Math.random() * 10000
-            )}.${extension}`;
-
-
+        // الحصول على جلسة المدير الحالية
         const {
-            error
-        } = await supabaseClient
-            .storage
-            .from(bucketName)
-            .upload(
-                uniqueName,
-                fileObject,
-                {
-                    contentType:
-                        fileObject.type,
-                    cacheControl:
-                        '3600',
-                    upsert: true
-                }
-            );
+            data: sessionData,
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
 
+        const accessToken =
+            sessionData?.session?.access_token;
 
-        if (error) {
-
-            console.error(
-                'خطأ الرفع للستوريدج:',
-                error.message
-            );
+        if (sessionError || !accessToken) {
 
             alert(
-                `فشل رفع الملف: ${error.message}`
+                'جلسة تسجيل الدخول غير صالحة، يرجى تسجيل الدخول مجدداً.'
             );
 
             return null;
         }
 
+        // تحويل أسماء Supabase القديمة إلى مجلدات Cloudflare R2
+        const folderMap = {
+            meals: 'meals',
+            banners: 'banners',
+            'restaurant-assets': 'restaurant-assets',
+            offers: 'offers'
+        };
 
-        const {
-            data: publicUrlData
-        } =
-            supabaseClient
-                .storage
-                .from(bucketName)
-                .getPublicUrl(uniqueName);
+        const folder =
+            folderMap[bucketName] || 'meals';
 
+        // رفع الصورة إلى Cloudflare Worker
+        const response = await fetch(
+            `https://castello-storage.my007sy.workers.dev/?folder=${encodeURIComponent(folder)}`,
+            {
+                method: 'PUT',
 
-        return publicUrlData.publicUrl;
+                headers: {
+                    'Authorization':
+                        `Bearer ${accessToken}`,
+
+                    'Content-Type':
+                        fileObject.type ||
+                        'application/octet-stream'
+                },
+
+                body: fileObject
+            }
+        );
+
+        const result =
+            await response.json().catch(() => ({}));
+
+        if (!response.ok || !result.success) {
+
+            console.error(
+                'Cloudflare R2 upload error:',
+                result
+            );
+
+            alert(
+                result?.message ||
+                'فشل رفع الصورة.'
+            );
+
+            return null;
+        }
+
+        console.log(
+            'تم رفع الصورة إلى R2:',
+            result.url
+        );
+
+        return result.url;
 
     } catch (err) {
 
         console.error(
-            'استثناء أثناء الرفع:',
+            'استثناء أثناء رفع الصورة إلى R2:',
             err
+        );
+
+        alert(
+            'حدث خطأ أثناء رفع الصورة.'
         );
 
         return null;
