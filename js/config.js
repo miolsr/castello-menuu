@@ -1,5 +1,5 @@
 export const SUPABASE_URL = "https://ryhulyjzyeyzorsjvyer.supabase.co";
-export const SUPABASE_KEY = "مفتاح المشروع الجديد";
+export const SUPABASE_KEY = "sb_publishable_Vy6SH2uTFS0FT1lhk-wk4w_B_d_W-0j";
 export const ADMIN_PASSWORD = "CastelloAdmin2026";
 
 // 🌍 قاموس لغات النظام الثابتة للواجهات (Arabic / Turkish / English)
