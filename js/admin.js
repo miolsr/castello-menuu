@@ -1880,11 +1880,56 @@ async function renderAdminStockDashboard() {
                     "
                 >
 
-                    <img
-                        src="${meal.image_url || ''}"
-                        alt="${escapeAttribute(meal.title || '')}"
-                        loading="lazy"
-                    >
+                   <div
+    style="
+        position:relative;
+        cursor:pointer;
+        display:inline-block;
+        margin-bottom:10px;
+    "
+    title="اضغط لتغيير صورة الوجبة"
+>
+    <img
+        src="${meal.image_url || ''}"
+        alt="${escapeAttribute(meal.title || '')}"
+        loading="lazy"
+        class="change-meal-image"
+        data-id="${meal.id}"
+        style="
+            width:120px;
+            height:120px;
+            object-fit:cover;
+            border-radius:10px;
+            cursor:pointer;
+            display:block;
+        "
+    >
+
+    <div
+        style="
+            position:absolute;
+            bottom:6px;
+            right:6px;
+            left:6px;
+            background:rgba(0,0,0,0.7);
+            color:white;
+            text-align:center;
+            padding:5px;
+            border-radius:6px;
+            font-size:0.7rem;
+        "
+    >
+        تغيير الصورة
+    </div>
+
+    <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        class="change-meal-image-input"
+        data-id="${meal.id}"
+        style="display:none;"
+    >
+</div>
 
 
                     <div class="stock-details">
@@ -2209,6 +2254,54 @@ async function renderAdminStockDashboard() {
 
 
         container.innerHTML = html;
+
+
+
+        //تعديل تغيير صورة الوجبة 25 سبتمبر
+
+        // ==================================
+// تغيير صورة الوجبة
+// ==================================
+
+document
+    .querySelectorAll('.change-meal-image')
+    .forEach(img => {
+
+        img.addEventListener('click', () => {
+
+            const mealId = img.dataset.id;
+
+            const input =
+                document.querySelector(
+                    `.change-meal-image-input[data-id="${mealId}"]`
+                );
+
+            if (input) {
+                input.click();
+            }
+        });
+    });
+
+
+document
+    .querySelectorAll('.change-meal-image-input')
+    .forEach(input => {
+
+        input.addEventListener('change', async () => {
+
+            const file = input.files?.[0];
+
+            if (!file) {
+                return;
+            }
+
+            await changeAdminMealImage(
+                input.dataset.id,
+                file
+            );
+        });
+    });
+
 
 
         // ==================================
@@ -2564,6 +2657,116 @@ async function updateAdminMeal(mealId) {
         );
     }
 }
+
+//تعديل 25 سبتمبر لتغيير صورة الوجبة
+
+// ==========================================
+// تغيير صورة وجبة فقط
+// ==========================================
+
+async function changeAdminMealImage(mealId, file) {
+
+    try {
+
+        if (!file) {
+            return;
+        }
+
+        const allowedTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/webp',
+            'image/gif'
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+
+            alert(
+                'نوع الصورة غير مدعوم.\n\nالمسموح: JPG, PNG, WEBP, GIF'
+            );
+
+            return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+
+            alert(
+                'حجم الصورة يجب ألا يتجاوز 10 MB.'
+            );
+
+            return;
+        }
+
+        // رفع الصورة الجديدة إلى Cloudflare R2
+        const newImageUrl =
+            await uploadToSupabaseStorage(
+                file,
+                'meals'
+            );
+
+        if (!newImageUrl) {
+            return;
+        }
+
+        // تحديث رابط الصورة فقط
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from('meals')
+                .update({
+                    image_url: newImageUrl
+                })
+                .eq('id', mealId)
+                .select('id, image_url')
+                .single();
+
+        if (error) {
+
+            console.error(
+                'خطأ تحديث صورة الوجبة:',
+                error
+            );
+
+            alert(
+                'تم رفع الصورة لكن فشل حفظ رابطها في قاعدة البيانات:\n\n' +
+                error.message
+            );
+
+            return;
+        }
+
+        if (!data) {
+
+            alert(
+                'لم يتم تحديث صورة الوجبة.'
+            );
+
+            return;
+        }
+
+        alert(
+            'تم تغيير صورة الوجبة بنجاح!'
+        );
+
+        // إعادة تحميل الكروت لإظهار الصورة الجديدة
+        await renderAdminStockDashboard();
+
+    } catch (err) {
+
+        console.error(
+            'خطأ أثناء تغيير صورة الوجبة:',
+            err
+        );
+
+        alert(
+            'حدث خطأ أثناء تغيير صورة الوجبة:\n' +
+            err.message
+        );
+    }
+}
+
 
 
 // ==========================================
